@@ -1,0 +1,98 @@
+# ==============================================================================
+# BIS SAHAYAK – Production & Deployment Environment Configuration
+# ==============================================================================
+# Copy this file to .env before starting Docker Compose:
+#   cp .env.example .env
+#
+# Generate random 32/64-character secrets with:
+#   openssl rand -hex 32
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. APPLICATION & SERVER SETTINGS
+# ------------------------------------------------------------------------------
+NODE_ENV=production
+PORT=3000
+HOST=0.0.0.0
+LOG_LEVEL=info
+
+# ------------------------------------------------------------------------------
+# 2. POSTGRESQL & PGVECTOR DATABASE
+# ------------------------------------------------------------------------------
+# In Docker Compose, the host is 'postgres' (container name).
+# For host/local execution, replace 'postgres:5432' with 'localhost:5432'.
+# If using AWS RDS, replace with your RDS endpoint.
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=123456
+POSTGRES_DB=business_saarthi
+
+DATABASE_URL=postgresql://postgres:123456@postgres:5432/business_saarthi
+
+# ------------------------------------------------------------------------------
+# 3. AUTHENTICATION & SECURITY TOKENS (min 32 chars required)
+# ------------------------------------------------------------------------------
+# Generate with: openssl rand -hex 32
+JWT_SECRET=mdheNDh09CRS5SOiTXHaFamvKGGC2iewNosN5QmHfzO
+JWT_REFRESH_SECRET=edDMp16G2BxdqApWFRr284Qp1yEJr3hXHuPLrMVraGt
+COOKIE_SECRET=oPp8v4dX+2XordkJN5f7xuB45Sp/fzIaFR40s9pGeGo=
+
+# Token Expiry Durations
+JWT_ACCESS_EXPIRY=15m
+JWT_REFRESH_EXPIRY=7d
+
+# ------------------------------------------------------------------------------
+# 4. CORS & NETWORKING
+# ------------------------------------------------------------------------------
+# URL of your frontend application (e.g., https://saarthi.example.com or http://localhost:5173)
+CORS_ORIGIN=https://your-frontend-domain.com,http://localhost:5173,*
+
+# ------------------------------------------------------------------------------
+# 5. RATE LIMITING
+# ------------------------------------------------------------------------------
+# 900000 ms = 15 minutes window
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# ------------------------------------------------------------------------------
+# 6. PYTHON AI SERVICE & RAG MICROSERVICE
+# ------------------------------------------------------------------------------
+# Internal URL used by the TypeScript backend to reach the FastAPI AI service
+AI_SERVICE_URL=http://ai_service:8000
+
+# Shared internal token between TypeScript Backend and Python AI Service (min 16 chars)
+# Generate with: openssl rand -hex 16
+AI_SERVICE_SECRET=luV0g197kuZiPshCsLzhPUVbtQQK7g8xCFoHp6CIRFB
+
+# Timeout for LLM generation (in milliseconds) – 120000ms = 2 min (for CPU-based 3B model)
+AI_SERVICE_TIMEOUT_MS=120000
+
+# ------------------------------------------------------------------------------
+# 7. OLLAMA LOCAL LLM & EMBEDDING CONFIGURATION
+# ------------------------------------------------------------------------------
+# Internal URL used by the Python AI service to communicate with Ollama
+OLLAMA_BASE_URL=http://ollama:11434
+
+# Models pulled and used by the system
+LLM_MODEL=llama3.2:3b
+EMBEDDING_MODEL=nomic-embed-text
+EMBEDDING_DIMENSIONS=768
+
+# LLM Generation Hyperparameters
+LLM_TEMPERATURE=0.1
+LLM_MAX_TOKENS=2048
+LLM_TIMEOUT=120
+
+# RAG & Retrieval Fusion Parameters
+RRF_K=60
+FTS_WEIGHT=1.0
+VECTOR_WEIGHT=1.0
+MAX_RETRIEVAL_RESULTS=8
+
+# ------------------------------------------------------------------------------
+# 8. EMAIL / SMTP (Optional)
+# ------------------------------------------------------------------------------
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+EMAIL_FROM=noreply@business-saarthi.in
