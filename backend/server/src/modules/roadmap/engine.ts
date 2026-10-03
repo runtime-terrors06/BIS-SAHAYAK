@@ -448,7 +448,72 @@ async function findStandardChunks(query: string, limit = 5): Promise<RetrievalRe
   ];
 }
 
+async function ensureBISRequirements(): Promise<void> {
+  const today = formatDate(new Date());
+  const bisReqs = [
+    {
+      id: 'bis_standard_identification',
+      title: 'Identify applicable Indian Standard',
+      category: 'BIS',
+      phase: 'BIS',
+      authority: 'Bureau of Indian Standards',
+      description: 'Identify the applicable Indian Standard for your product category.',
+      sourceUrl: 'https://www.bis.gov.in/',
+      lastVerifiedAt: today,
+      priority: 'CRITICAL' as const,
+    },
+    {
+      id: 'bis_certification_check',
+      title: 'Confirm BIS certification is mandatory',
+      category: 'BIS',
+      phase: 'BIS',
+      authority: 'Bureau of Indian Standards',
+      description: 'Confirm whether a Quality Control Order mandates BIS certification for your product.',
+      sourceUrl: 'https://www.bis.gov.in/',
+      lastVerifiedAt: today,
+      priority: 'CRITICAL' as const,
+    },
+    {
+      id: 'bis_testing',
+      title: 'Find required tests from standard clauses',
+      category: 'BIS',
+      phase: 'BIS',
+      authority: 'Bureau of Indian Standards',
+      description: 'Identify the mandatory test clauses in the applicable Indian Standard.',
+      sourceUrl: 'https://www.bis.gov.in/',
+      lastVerifiedAt: today,
+      priority: 'HIGH' as const,
+    },
+    {
+      id: 'bis_lab_search',
+      title: 'Find recognized testing labs',
+      category: 'BIS',
+      phase: 'BIS',
+      authority: 'Bureau of Indian Standards',
+      description: 'Locate BIS-recognized laboratories that can perform the required tests.',
+      sourceUrl: 'https://www.bis.gov.in/laboratory-directory/',
+      lastVerifiedAt: today,
+      priority: 'MEDIUM' as const,
+    },
+    {
+      id: 'bis_scheme_application',
+      title: 'Apply for the BIS licence (ISI mark)',
+      category: 'BIS',
+      phase: 'BIS',
+      authority: 'Bureau of Indian Standards',
+      description: 'Submit the BIS licence application under the appropriate certification scheme.',
+      sourceUrl: 'https://www.manakonline.in/',
+      lastVerifiedAt: today,
+      priority: 'CRITICAL' as const,
+    },
+  ];
+
+  await db.insert(schema.requirements).values(bisReqs).onConflictDoNothing();
+}
+
 async function generateBISSteps(profile: BusinessProfile): Promise<RoadmapStep[]> {
+  await ensureBISRequirements();
+
   const steps: RoadmapStep[] = [];
   let stepOrder = 8;
 
