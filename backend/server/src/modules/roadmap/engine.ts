@@ -449,7 +449,7 @@ async function findStandardChunks(query: string, limit = 5): Promise<RetrievalRe
 }
 
 async function ensureBISRequirements(): Promise<void> {
-  const today = formatDate(new Date());
+  const today: string = new Date().toISOString().slice(0, 10);
   const bisReqs = [
     {
       id: 'bis_standard_identification',
